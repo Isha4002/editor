@@ -1,0 +1,67 @@
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Globe } from "lucide-react";
+import { signIn } from "@/auth";
+
+async function handleGoogleSignIn() {
+  "use server";
+  await signIn("google");
+}
+
+async function handleGithubSignIn() {
+  "use server";
+  await signIn("github");
+}
+
+const SignInFormClient = () => {
+  return (
+    <Card className="w-full max-w-md">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold text-center">
+          Sign In
+        </CardTitle>
+        <CardDescription className="text-center">
+          Choose your preferred sign-in method
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="grid gap-4">
+        
+        {/* Google */}
+        <form action={handleGoogleSignIn}>
+          <Button type="submit" variant="outline" className="w-full">
+            <Globe className="mr-2 h-4 w-4" />
+            <span>Sign in with Google</span>
+          </Button>
+        </form>
+
+        {/* GitHub */}
+        <form action={handleGithubSignIn}>
+          <Button type="submit" variant="outline" className="w-full">
+            <img src="/login.svg" className="mr-2 h-4 w-4" />
+            <span>Sign in with GitHub</span>
+          </Button>
+        </form>
+
+      </CardContent>
+
+      <CardFooter>
+        <p className="text-sm text-center text-gray-500 w-full">
+          By signing in, you agree to our Terms & Privacy Policy.
+        </p>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export default SignInFormClient;
+
+
