@@ -3,6 +3,8 @@ import React from 'react'
 import AddNewButton from '@/modules/dashboard/actions/components/add-new'
 import { getAllPlaygroundForUser } from '@/modules/dashboard/actions'
 import EmptyState from '@/modules/dashboard/actions/components/empty-state'
+import ProjectTable from '@/modules/dashboard/actions/components/project-table'
+
 
 const page = async() => {
     const playgrounds = await getAllPlaygroundForUser();
