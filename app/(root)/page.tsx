@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
    
   return (
-    <div className=" z-20 flex flex-col items-center justify-start min-h-screen py-2 mt-10">
+    <div className="z-20 flex flex-col items-center justify-start min-h-screen py-2 mt-10 w-full bg-black bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:40px_40px]">
       
       <div className="flex flex-col justify-center items-center my-5">
       <Image src={"/hero.svg"} alt="Hero-Section" height={500}  width={500}/>

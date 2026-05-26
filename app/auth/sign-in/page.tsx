@@ -11,7 +11,7 @@ const Page = () => {
         alt="Login-Image"
         width={300}
         height={300}
-        className="m-6 object-cover"
+        className="max-w-[300px] h-auto"
         priority
       />
 

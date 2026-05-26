@@ -16,11 +16,11 @@ enum UserRole {
 }
 
 model User {
-  id    String @id @default(uuid()) @map("_id")
+  id String @id @default(uuid()) @map("_id")
 
   email String @unique
 
-  name  String?
+  name String?
 
   image String?
 
@@ -69,7 +69,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-
   @@index([userId])
 }
 
@@ -100,6 +99,8 @@ model Playground {
   userId String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  templateFiles TemplateFile[]
 }
 
 model StarMark {
@@ -118,4 +119,18 @@ model StarMark {
   playground Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
 
   @@unique([userId, playgroundId])
+}
+
+model TemplateFile {
+  id String @id @default(cuid()) @map("_id")
+
+  content String
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  playgroundId String @unique
+
+  playground Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
 }
