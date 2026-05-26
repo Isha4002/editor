@@ -1,14 +1,24 @@
 import React from 'react'
-import Image from 'next/image'
-import SignInFormClient from '@/modules/auth/components/sign-in-form-client'
+import Image from "next/image";
+import SignInFormClient from "@/modules/auth/components/sign-in-form-client";
 
-const Page = ()=>{
-    return(
-        <>
-        <Image src={"/login.svg"} alt="Login-Image" width={300} height={300} className='m-6object-cover' />
-        <SignInFormClient/>
-        </>
-    )
-}
+const Page = () => {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
+      
+      <Image
+        src="/login.svg"
+        alt="Login-Image"
+        width={300}
+        height={300}
+        className="m-6 object-cover"
+        priority
+      />
 
-export default Page
+      <SignInFormClient />
+
+    </div>
+  );
+};
+
+export default Page;

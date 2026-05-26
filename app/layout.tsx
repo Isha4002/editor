@@ -1,36 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
-import { auth } from "@/auth";
-
-// ❗ Client wrapper inside same file
-import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/ui/providers/theme-providers";
-
-// 👇 CLIENT WRAPPER
-function Providers({
-  children,
-  session,
-}: {
-  children: React.ReactNode;
-  session: any;
-}) {
-  "use client";
-
-  return (
-    <SessionProvider session={session}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
-    </SessionProvider>
-  );
-}
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "VibeCode Editor",
-  description: "Code Editor Platform",
+  description: "Code Editor for Everyone",
 };
 
 export default async function RootLayout({
@@ -59,9 +34,21 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers session={session}>
-          {children}
-        </Providers>
+        <SessionProvider session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex flex-col min-h-screen">
+              <Toaster/>
+            <div className="flex-1">
+            {children}
+            </div>
+            </div>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
