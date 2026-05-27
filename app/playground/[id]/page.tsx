@@ -32,8 +32,9 @@ import {
   TemplateFile,
   TemplateFolder,
 } from "@/modules/playground/lib/path-to-json";
-//import WebContainerPreview from "@/modules/webcontainers/components/webcontainer-preview";
-//import { useWebContainer } from "@/modules/webcontainers/hooks/useWebContainer";
+import { useWebContainer } from "@/modules/webcontainers/hooks/useWebContainer";
+import WebContainerPreview from "@/modules/webcontainers/components/webcontainer-preview";
+
 import { Monaco } from "@monaco-editor/react";
 import { TooltipContent } from "@radix-ui/react-tooltip";
 import {
@@ -70,6 +71,15 @@ const MainPlaygroundPage = () => {
 
 
     } = useFileExplorer();
+
+    const {
+      serverUrl,
+      instance,
+      writeFileSync,
+      isLoading: containerLoading,
+      error: containerError,
+                       // @ts-ignore
+    } = useWebContainer({templateData});
 
     useEffect(() => {setPlaygroundId(id)}, [id, setPlaygroundId]);
 
@@ -269,6 +279,26 @@ const MainPlaygroundPage = () => {
     />
   ) : null}
 </ResizablePanel>
+
+{
+  isPreviewVisible && (
+    <>
+    <ResizableHandle/>
+    <ResizablePanel defaultSize={50}>
+      <WebContainerPreview
+      templateData={templateData}
+      instance={instance}
+      writeFileSync={writeFileSync}
+      isLoading={containerLoading}
+      error={containerError}
+      serverUrl={serverUrl!}
+      forceResetup={false}
+      />
+
+      </ResizablePanel>
+    </>
+  )
+}
 
                     
                       </ResizablePanelGroup>
