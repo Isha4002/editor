@@ -5,8 +5,10 @@ import { getPlaygroundById, saveUpdatedCode } from "../actions";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { toast } from "sonner";
 
-interface PlaygroundData extends Playground {
-  templateFiles: { content: JsonValue }[];
+interface PlaygroundData {
+  title: string;
+  id: string;
+  [key: string]:any,
 }
 
 interface UsePlaygroundReturn {
