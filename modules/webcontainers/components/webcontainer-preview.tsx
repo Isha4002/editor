@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { transformToWebContainerFormat } from "../hooks/transformer";
 import { Check, CheckCircle, Loader2, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-//import Term from "./terminal";
+import TermimalComponent from "./terminal";
 
 interface WebContainerPreviewProps {
   templateData: TemplateFolder;
@@ -40,6 +40,8 @@ const WebContainerPreview = ({
   const [setupError, setSetupError] = useState<string | null>(null);
   const [isSetupCompleted, setIsSetupCompleted] = useState<boolean>(false);
   const [isSetupInProgress, setIsSetupInProgress] = useState<boolean>(false);
+
+  const terminalRef = useRef<any>(null);
 
 //   const terminalRef = useRef<{
 //     writeToTerminal: (data: string) => void;
@@ -78,18 +80,18 @@ const WebContainerPreview = ({
           );
 
           if (packageJsonExists) {
-            // if (terminalRef?.current?.writeToTerminal) {
-            //   terminalRef.current.writeToTerminal(
-            //     "Reconnecting to existing WebContainer instance...\r\n"
-            //   );
-            // }
+            if (terminalRef?.current?.writeToTerminal) {
+              terminalRef.current.writeToTerminal(
+                "Reconnecting to existing WebContainer instance...\r\n"
+              );
+            }
 
             instance.on("server-ready", (port: number, url: string) => {
-            //   if (terminalRef?.current?.writeToTerminal) {
-            //     terminalRef.current.writeToTerminal(
-            //       "Development server is already running at: " + url + "\r\n"
-            //     );
-            //   }
+              if (terminalRef?.current?.writeToTerminal) {
+                terminalRef.current.writeToTerminal(
+                  `Development server is already running at: ${url}\r\n`
+                );
+              }
 
               setPreviewUrl(url);
               setLoadingState((prev) => ({
@@ -107,11 +109,11 @@ const WebContainerPreview = ({
 
         setLoadingState((prev) => ({ ...prev, transforming: true }));
         setCurrentStep(1);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal(
-        //     "Transforming template files...\r\n"
-        //   );
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal(
+            "Transforming template files...\r\n"
+          );
+        }
         const files = transformToWebContainerFormat(templateData);
 
         setLoadingState((prev) => ({
@@ -120,15 +122,15 @@ const WebContainerPreview = ({
           mounting: true,
         }));
         setCurrentStep(2);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal("Mounting files...\r\n");
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal("Mounting files...\r\n");
+        }
         await instance.mount(files);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal(
-        //     "Files mounted successfully.\r\n"
-        //   );
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal(
+            "Files mounted successfully.\r\n"
+          );
+        }
 
         setLoadingState((prev) => ({
           ...prev,
@@ -136,16 +138,16 @@ const WebContainerPreview = ({
           installing: true,
         }));
         setCurrentStep(3);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal("Installing dependencies...\r\n");
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal("Installing dependencies...\r\n");
+        }
         const installProcess = await instance.spawn("npm", ["install"]);
         installProcess.output.pipeTo(
           new WritableStream({
             write(data) {
-            //   if (terminalRef?.current?.writeToTerminal) {
-            //     terminalRef.current.writeToTerminal(data);
-            //   }
+              if (terminalRef?.current?.writeToTerminal) {
+                terminalRef.current.writeToTerminal(data);
+              }
             },
           })
         );
@@ -155,11 +157,11 @@ const WebContainerPreview = ({
             `npm install failed with exit code ${installExitCode}`
           );
         }
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal(
-        //     "Dependencies installed successfully.\r\n"
-        //   );
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal(
+            "Dependencies installed successfully.\r\n"
+          );
+        }
 
         setLoadingState((prev) => ({
           ...prev,
@@ -167,18 +169,18 @@ const WebContainerPreview = ({
           starting: true,
         }));
         setCurrentStep(4);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal(
-        //     "Starting development server...\r\n"
-        //   );
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal(
+            "Starting development server...\r\n"
+          );
+        }
         const startProcess = await instance.spawn("npm", ["run", "start"]);
         instance.on("server-ready", (port: number, url: string) => {
-        //   if (terminalRef?.current?.writeToTerminal) {
-        //     terminalRef.current.writeToTerminal(
-        //       "Development server is running at: " + url + "\r\n"
-        //     );
-        //   }
+          if (terminalRef?.current?.writeToTerminal) {
+            terminalRef.current.writeToTerminal(
+              `Development server is running at: ${url}\r\n`
+            );
+          }
           setPreviewUrl(url);
           setLoadingState((prev) => ({
             ...prev,
@@ -191,9 +193,9 @@ const WebContainerPreview = ({
         startProcess.output.pipeTo(
           new WritableStream({
             write(data) {
-            //   if (terminalRef?.current?.writeToTerminal) {
-            //     terminalRef.current.writeToTerminal(data);
-            //   }
+              if (terminalRef?.current?.writeToTerminal) {
+                terminalRef.current.writeToTerminal(data);
+              }
             },
           })
         );
@@ -201,11 +203,11 @@ const WebContainerPreview = ({
         console.error("Error setting up container:", err);
         const errorMessage =
           err instanceof Error ? err.message : String(err);
-        // if (terminalRef?.current?.writeToTerminal) {
-        //   terminalRef.current.writeToTerminal(
-        //     `Error during setup: ${errorMessage}\r\n`
-        //   );
-        // }
+        if (terminalRef?.current?.writeToTerminal) {
+          terminalRef.current.writeToTerminal(
+            `Error during setup: ${errorMessage}\r\n`
+          );
+        }
         setSetupError(errorMessage);
         setIsSetupInProgress(false);
         setLoadingState({
@@ -313,12 +315,12 @@ const WebContainerPreview = ({
           </div>
 
           <div className="flex-1 p-4">
-            {/* <Term
+            <TermimalComponent
               ref={terminalRef}
               webContainerInstance={instance}
               theme="dark"
               className="h-full"
-            /> */}
+            />
           </div>
         </div>
       ) : (
@@ -332,12 +334,12 @@ const WebContainerPreview = ({
           </div>
 
           <div className="h-64 border-t">
-            {/* <Term
+            <TermimalComponent
               ref={terminalRef}
               webContainerInstance={instance}
               theme="dark"
               className="h-full"
-            /> */}
+            />
           </div>
         </div>
       )}
@@ -346,3 +348,4 @@ const WebContainerPreview = ({
 }
 
 export default WebContainerPreview;
+          
