@@ -6,7 +6,18 @@ import { useEffect, useRef, useState } from "react";
 import { transformToWebContainerFormat } from "../hooks/transformer";
 import { Check, CheckCircle, Loader2, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import TermimalComponent from "./terminal";
+//import TermimalComponent from "./terminal";
+import dynamic from "next/dynamic";
+
+
+
+const TerminalComponent = dynamic(
+  () => import("./terminal"),
+  {
+    ssr: false,
+  }
+);
+
 
 interface WebContainerPreviewProps {
   templateData: TemplateFolder;
@@ -141,7 +152,10 @@ const WebContainerPreview = ({
         if (terminalRef?.current?.writeToTerminal) {
           terminalRef.current.writeToTerminal("Installing dependencies...\r\n");
         }
-        const installProcess = await instance.spawn("npm", ["install"]);
+        const installProcess = await instance.spawn(
+  "npm",
+  ["install", "--legacy-peer-deps", "--no-fund", "--no-audit"]
+);
         installProcess.output.pipeTo(
           new WritableStream({
             write(data) {
@@ -174,7 +188,10 @@ const WebContainerPreview = ({
             "Starting development server...\r\n"
           );
         }
-        const startProcess = await instance.spawn("npm", ["run", "start"]);
+        const startProcess = await instance.spawn(
+  "npm",
+  ["run", "dev"]
+);
         instance.on("server-ready", (port: number, url: string) => {
           if (terminalRef?.current?.writeToTerminal) {
             terminalRef.current.writeToTerminal(
@@ -315,7 +332,7 @@ const WebContainerPreview = ({
           </div>
 
           <div className="flex-1 p-4">
-            <TermimalComponent
+            <TerminalComponent
               ref={terminalRef}
               webContainerInstance={instance}
               theme="dark"
@@ -334,7 +351,7 @@ const WebContainerPreview = ({
           </div>
 
           <div className="h-64 border-t">
-            <TermimalComponent
+            <TerminalComponent
               ref={terminalRef}
               webContainerInstance={instance}
               theme="dark"
