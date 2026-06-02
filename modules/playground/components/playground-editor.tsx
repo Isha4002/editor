@@ -1,27 +1,3 @@
-// "use client";
-
-// import { useCallback, useEffect, useRef } from "react";
-// import { TemplateFile } from "../lib/path-to-json";
-// import  Editor, { type Monaco } from "@monaco-editor/react";
-// import {
-//   configureMonaco,
-//   defaultEditorOptions,
-//   getEditorLanguage,
-// } from "../lib/editor-config";
-// import { editor, IDisposable, Position } from "monaco-editor";
-
-// const PlaygroundEditor = () => {
-//     return (
-//         <div>
-//             PlaygroundEditor
-//         </div>
-//     )
-// } 
-
-// export default PlaygroundEditor
-
-
-
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
