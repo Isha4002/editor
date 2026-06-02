@@ -23,7 +23,7 @@ import {
 import LoadingStep from "@/modules/playground/components/loader";
 import PlaygroundEditor from "@/modules/playground/components/playground-editor";
 import { TemplateFileTree } from "@/modules/playground/components/playground-explorer";
-//import ToggleAI from "@/modules/playground/components/toggle-ai";
+import ToggleAI from "@/modules/playground/components/toggle-ai";
 //import { useAISuggestion } from "@/modules/playground/hooks/useAISuggestion";
 import { useFileExplorer } from "@/modules/playground/hooks/useFileExplorer";
 import { usePlayground } from "@/modules/playground/hooks/usePlayground";
@@ -224,7 +224,7 @@ function Page() {
         );
 
         if (writeFileSync) {
-          writeFileSync(filePath, fileToSave.content);
+          await writeFileSync(filePath, fileToSave.content);
           lastSyncedContent.current.set(fileToSave.id, fileToSave.content);
           if (instance && instance.fs) {
             await instance.fs.writeFile(filePath, fileToSave.content);
@@ -232,6 +232,7 @@ function Page() {
         }
 
         await saveTemplateData(updatedTemplateData);
+        console.log("Saved", fileToSave.content);
         setTemplateData(updatedTemplateData);
 
         const updatedOpenFiles = openFiles.map((f) =>
@@ -415,11 +416,11 @@ function Page() {
                   </TooltipTrigger>
                   <TooltipContent>Save All (Ctrl + Shift + S)</TooltipContent>
                 </Tooltip>
-                {/* <ToggleAI
-                  isEnabled={aiSuggestions.isEnabled}
-                  onToggle={aiSuggestions.toggleEnabled}
-                  suggestionLoading={aiSuggestions.isLoading}
-                /> */}
+                <ToggleAI
+                  isEnabled={true}//{aiSuggestions.isEnabled}
+                  onToggle={() => {}}//{aiSuggestions.toggleEnabled}
+                  suggestionLoading={false}//{aiSuggestions.isLoading}
+                />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -506,21 +507,26 @@ function Page() {
   content={selectedFile?.content || ""}
 
   onContentChange={(value) => {
-    if (!selectedFile) return;
+  if (!selectedFile) return;
 
-    const updatedFiles =
-      openFiles.map((file) =>
-        file.id === selectedFile.id
-          ? {
-              ...file,
-              content: value,
-              hasUnsavedChanges: true,
-            }
-          : file
-      );
+  updateFileContent(
+    selectedFile.id,
+    value
+  );
 
-    setOpenFiles(updatedFiles);
-  }}
+  const updatedFiles = openFiles.map(
+    (file) =>
+      file.id === selectedFile.id
+        ? {
+            ...file,
+            content: value,
+            hasUnsavedChanges: true,
+          }
+        : file
+  );
+
+  setOpenFiles(updatedFiles);
+}}
 
   suggestion={null}
   suggestionLoading={false}
@@ -537,14 +543,15 @@ function Page() {
                         <ResizableHandle />
                         <ResizablePanel defaultSize={50}>
                           <WebContainerPreview
-                            templateData={templateData!}
-                            instance={instance}
-                            writeFileSync={writeFileSync}
-                            isLoading={containerLoading}
-                            error={containerError}
-                             serverUrl={serverUrl as string}
-                            forceResetup={false}
-                          />
+  key={JSON.stringify(templateData).length}
+  templateData={templateData!}
+  instance={instance}
+  writeFileSync={writeFileSync}
+  isLoading={containerLoading}
+  error={containerError}
+  serverUrl={serverUrl as string}
+  forceResetup={false}
+/>
                         </ResizablePanel>
                       </>
                     )}
