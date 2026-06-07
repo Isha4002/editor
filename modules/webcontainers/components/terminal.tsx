@@ -9,7 +9,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { Terminal } from "@xterm/xterm";
-import { FitAddon } from "xterm-addon-fit";
+import { FitAddon } from "@xterm/addon-fit";
 import { WebLinksAddon } from "xterm-addon-web-links";
 import { SearchAddon } from "xterm-addon-search";
 import "@xterm/xterm/css/xterm.css";
@@ -323,6 +323,7 @@ const Term = forwardRef<TerminalRef, TerminalProps>(
       terminal.loadAddon(searchAddonInstance);
 
       terminal.open(terminalRef.current);
+      
 
       fitAddon.current = fitAddonInstance;
       searchAddon.current = searchAddonInstance;
@@ -333,8 +334,14 @@ const Term = forwardRef<TerminalRef, TerminalProps>(
 
       // Initial fit
       setTimeout(() => {
-        fitAddonInstance.fit();
-      }, 100);
+  try {
+    if (terminalRef.current && fitAddonInstance) {
+      fitAddonInstance.fit();
+    }
+  } catch (err) {
+    console.error("Fit error:", err);
+  }
+}, 300);
 
       // Welcome message
       terminal.writeln("🚀 WebContainer Terminal");
@@ -415,12 +422,22 @@ const Term = forwardRef<TerminalRef, TerminalProps>(
 
       // Handle resize
       const resizeObserver = new ResizeObserver(() => {
-        if (fitAddon.current) {
-          setTimeout(() => {
-            fitAddon.current?.fit();
-          }, 100);
-        }
-      });
+  if (
+    fitAddon.current &&
+    term.current &&
+    terminalRef.current &&
+    terminalRef.current.offsetWidth > 0 &&
+    terminalRef.current.offsetHeight > 0
+  ) {
+    requestAnimationFrame(() => {
+      try {
+        fitAddon.current?.fit();
+      } catch (err) {
+        console.error("Resize fit error:", err);
+      }
+    });
+  }
+});
 
       if (terminalRef.current) {
         resizeObserver.observe(terminalRef.current);

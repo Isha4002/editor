@@ -12,7 +12,7 @@ export const getPlaygroundById =
           where: { id },
 
           include: {
-            title: true,
+            
             templateFiles: true,
           },
         });
