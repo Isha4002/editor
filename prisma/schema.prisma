@@ -32,6 +32,8 @@ model User {
 
   starredPlayground StarMark[]
 
+  chatMessages ChatMessage[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -130,7 +132,19 @@ model TemplateFile {
 
   updatedAt DateTime @updatedAt
 
-  playgroundId String @unique
+  playgroundId String 
 
   playground Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id String @id @default(cuid()) @map("_id")
+  userId String
+  role String
+  content String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
