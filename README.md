@@ -1,3 +1,84 @@
+# 🚀 VibeCode Editor
+
+An AI-Powered Cloud IDE built with Next.js, Monaco Editor, WebContainers, and PostgreSQL.
+
+VibeCode Editor provides a complete browser-based development environment where users can create projects, write code, execute applications, manage workspaces, and interact with an AI coding assistant — all from a single platform.
+
+---
+
+## ✨ Features
+
+### 📝 Advanced Code Editor
+- Monaco Editor integration
+- Syntax highlighting
+- Multi-file project support
+- VS Code-like editing experience
+
+### ⚡ Browser-Based Execution
+- WebContainers integration
+- Run applications directly in the browser
+- Integrated terminal support
+- No local setup required
+
+### 🤖 AI Coding Assistant
+- Code explanations
+- Bug fixing assistance
+- Code reviews
+- Optimization suggestions
+- Multiple AI interaction modes
+
+### 📁 Project Management
+- Create and manage projects
+- Template-based project generation
+- Dashboard interface
+- Favorite projects support
+
+### 🔐 Authentication
+- Secure user authentication
+- GitHub login support
+- User-specific workspaces
+
+### 🎨 Modern UI
+- Responsive design
+- Dark/Light mode support
+- Clean developer-focused interface
+
+---
+
+## 🏗️ System Architecture
+
+```text
+User
+ │
+ ▼
+Authentication
+ │
+ ▼
+Dashboard
+ │
+ ▼
+Project Creation
+ │
+ ▼
+Monaco Editor
+ │
+ ▼
+WebContainers
+ │
+ ▼
+Code Execution
+
+AI Assistant
+ │
+ ▼
+Qwen / Gemini
+
+Database
+ │
+ ▼
+PostgreSQL + Prisma
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
